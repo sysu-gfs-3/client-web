@@ -5,19 +5,14 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
-import axios from 'axios'
-
-Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = axios
-axios.defaults.baseURL = '/api'
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
   router,
-  components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  render: h => h(App)
 })
