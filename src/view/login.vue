@@ -39,11 +39,13 @@
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
+      <el-button @click="test">123</el-button>
     </el-main>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Login',
   data () {
@@ -80,14 +82,6 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // axios.get('/', {
-          //   account: this.ruleForm.account,
-          //   pass: this.ruleForm.pass
-          // }).then(function (res) {
-          //   console.log(res.data)
-          // }).catch(function (err) {
-          //   console.log(err)
-          // })
           this.$router.push({ path: '/index' })
         } else {
           console.log('error submit!!')
@@ -97,6 +91,16 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    test () {
+      axios.get('/', {
+        account: this.ruleForm.account,
+        pass: this.ruleForm.pass
+      }).then(function (res) {
+        console.log(res.data)
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
   }
 }
