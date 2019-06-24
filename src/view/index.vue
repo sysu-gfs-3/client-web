@@ -25,6 +25,12 @@
       <el-main>
         <div class="aside-col">
           <el-menu class="menu" :default-active="$route.path" router :collapse="Collapse">
+            <el-menu-item>
+              <div class="menu-toggle" @click.prevent="collapse">
+                <i class="iconfont icon-menufold" v-show="!collapsed"></i>
+                <i class="iconfont icon-menuunfold" v-show="collapsed"></i>
+              </div>
+            </el-menu-item>
             <el-menu-item index="/index">
               <i class="el-icon-s-home"></i>
               <span slot="title">首页</span>
@@ -35,8 +41,8 @@
                 <span slot="title">用户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="/index/Identity">用户审核</el-menu-item>
-                <el-menu-item index="1-2">用户目录</el-menu-item>
+                <el-menu-item index="/首页/用户审核">用户审核</el-menu-item>
+                <el-menu-item index="/首页/用户列表">用户目录</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2">
@@ -55,8 +61,8 @@
                 <span slot="title">设置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="3-1">个人信息</el-menu-item>
-                <el-menu-item index="3-2">修改密码</el-menu-item>
+                <el-menu-item index="/首页/个人信息">个人信息</el-menu-item>
+                <el-menu-item index="/首页/修改密码">修改密码</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -64,10 +70,10 @@
         <div class="main-col">
           <el-row :span="24">
             <el-col :span="12">
-              <strong class="grid-content">{{$route.name}}</strong>
+              <strong class="grid-content" id="m_tittle">{{$route.name}}</strong>
             </el-col>
             <el-col :span="12">
-              <div class="grid-content">
+              <div class="grid-content" id="m_path">
                 <el-breadcrumb separator="/" class="breadcrumb-inner">
                   <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
                     {{ item.name }}
@@ -176,18 +182,22 @@ body > .el-container {
   /* position: fixed; */
   left: 200px;
   display: inline-block;
+  padding-top: 10px;
   width: calc(100% - 200px);
   height: 100vh;
 }
 #el-menu-item {
   padding: 0px;
 }
-/* #index {
-  height: 94%;
+#m_tittle {
+  text-align: left;
+  padding-left: 10px;
+  float: left;
 }
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-} */
+#m_path {
+  text-align: right;
+  padding-right: 20px;
+  float: right;
+}
 
 </style>

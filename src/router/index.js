@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Login from '@/view/Login'
 import index from '@/view/index'
 import Identity from '@/components/identity'
+import userlist from '@/components/user_list'
+import information from '@/components/information'
+import changepwd from '@/components/changepwd'
 
 Vue.use(Router)
 
@@ -14,13 +17,38 @@ export default new Router({
       component: Login
     },
     {
-      path: '/index',
-      name: 'index',
+      path: '/首页',
+      name: '首页',
       component: index,
       children: [{
-        path: '/index/Identity',
-        name: 'Identity',
+        path: '/首页/用户审核',
+        name: '用户审核',
         component: Identity
+      },
+      {
+        path: '/首页/用户列表',
+        name: '用户列表',
+        component: userlist
+      },
+      // {
+      //   path: '/首页/个人信息',
+      //   name: '个人信息',
+      //   component: information
+      // },
+      // {
+      //   path: '/首页/个人信息',
+      //   name: '个人信息',
+      //   component: information
+      // },
+      {
+        path: '/首页/个人信息',
+        name: '个人信息',
+        component: information
+      },
+      {
+        path: '/首页/修改密码',
+        name: '修改密码',
+        component: changepwd
       }]
     }
   ]

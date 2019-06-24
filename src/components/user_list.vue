@@ -30,7 +30,7 @@
                         <span>{{ props.row.num }}</span>
                     </el-form-item>
                     <el-form-item label="联系电话">
-                        <span>{{ props.row.tel }}</span>
+                        <span>{{ props.row.tle }}</span>
                     </el-form-item>
                     <el-form-item label="邮箱">
                         <span>{{ props.row.email }}</span>
@@ -41,25 +41,13 @@
                 </el-form>
             </template>
         </el-table-column>
-        <el-table-column
-            label="用户 ID"
-            prop="id"
-        >
+        <el-table-column label="用户 ID" prop="id" sortable>
         </el-table-column>
-        <el-table-column
-            label="用户姓名"
-            prop="name"
-        >
+        <el-table-column label="用户姓名" prop="name" sortable>
         </el-table-column>
-        <el-table-column
-            label="性别"
-            prop="gender"
-        >
+        <el-table-column label="性别" prop="gender" sortable>
         </el-table-column>
-        <el-table-column
-            label="身份类别"
-            prop="type"
-        >
+        <el-table-column label="身份类别" prop="type" sortable>
         </el-table-column>
         <el-table-column label="操作">
             <template slot-scope="scope">
