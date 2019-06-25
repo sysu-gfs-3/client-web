@@ -81,11 +81,46 @@ export default {
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$router.push({ path: '/index' })
+        if (!valid) {
+          this.$notify.error({
+            title: '错误',
+            message: '不能为空'
+          })
         } else {
-          console.log('error submit!!')
-          return false
+          axios.post('/api/v1/login', {
+            account: this.ruleForm.account,
+            password: this.ruleForm.pass
+          }).then((response) => {
+            this.$refs[formName].validate((valid) => {
+              if (response.data.status === 'ok') {
+                var data = JSON.parse(response.data.data)
+                this.$notify({
+                  title: '登录成功',
+                  message: '欢迎您' + data.name,
+                  type: 'success'
+                })
+                this.$router.push({ path: '/首页' })
+                // console.log(data)
+              } else {
+                if (response.data.message === 'wrong password') {
+                  this.$notify.error({
+                    title: '错误',
+                    message: '密码错误'
+                  })
+                } else {
+                  this.$notify.error({
+                    title: '错误',
+                    message: '用户名错误'
+                  })
+                }
+                console.log(response.data.message)
+                return false
+              }
+            })
+            console.log(response.data.status)
+          }).catch(function (err) {
+            console.log(err)
+          })
         }
       })
     },
@@ -93,11 +128,12 @@ export default {
       this.$refs[formName].resetFields()
     },
     test () {
-      axios.get('/', {
-        account: this.ruleForm.account,
-        pass: this.ruleForm.pass
-      }).then(function (res) {
-        console.log(res.data)
+      axios.post('/api/v1/get_users', {
+        user_type: 'all',
+        page: 0
+      }).then((response) => {
+        var data = JSON.parse(response.data.data)
+        console.log(data.length)
       }).catch(function (err) {
         console.log(err)
       })

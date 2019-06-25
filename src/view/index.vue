@@ -10,28 +10,29 @@
             </div>
           </el-col>
           <el-col :span="4" class="userinfo">
-            <el-dropdown trigger="hover">
-              <i class="el-icon-setting" style="margin-right: 15px"></i>
+            <i type="primary" class="el-icon-user-solid"></i>
+            <span>蒋侑伸</span>
+            <el-dropdown trigger="click">
+              <i class="el-icon-setting" style="margin-left: 15px"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>修改密码</el-dropdown-item>
+                <el-dropdown-item>
+                  <div @click="jumpTo('/首页/个人信息')"><span>个人信息</span></div>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <div @click="jumpTo('/首页/修改密码')"><span>修改密码</span></div>
+                </el-dropdown-item>
                 <el-dropdown-item divided>退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span>蒋侑伸</span>
           </el-col>
         </el-col>
       </el-header>
       <el-main>
         <div class="aside-col">
-          <el-menu class="menu" :default-active="$route.path" router :collapse="Collapse">
+          <el-menu class="menu" :default-active="$route.path" router>
             <el-menu-item>
-              <div class="menu-toggle" @click.prevent="collapse">
-                <i class="iconfont icon-menufold" v-show="!collapsed"></i>
-                <i class="iconfont icon-menuunfold" v-show="collapsed"></i>
-              </div>
             </el-menu-item>
-            <el-menu-item index="/index">
+            <el-menu-item index="/首页">
               <i class="el-icon-s-home"></i>
               <span slot="title">首页</span>
             </el-menu-item>
@@ -51,8 +52,8 @@
                 <span slot="title">任务管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="2-1">任务审核</el-menu-item>
-                <el-menu-item index="2-2">任务目录</el-menu-item>
+                <el-menu-item index="/首页/任务审核">任务审核</el-menu-item>
+                <el-menu-item index="/首页/任务目录">任务目录</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
@@ -101,6 +102,10 @@ export default {
     }
   },
   methods: {
+    jumpTo (url) {
+      console.log('123')
+      this.$router.push(url) // 用go刷新
+    },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
     },
@@ -135,9 +140,12 @@ export default {
   padding-left: 10px;
   float: left;
 }
+.el-icon-user-solid {
+  padding-right: 5px;
+}
 .userinfo {
   text-align: right;
-  padding-right: 35px;
+  padding-left: 35px;
   float: right;
 }
 .el-aside {

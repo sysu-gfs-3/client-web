@@ -1,9 +1,18 @@
 <template>
-    <el-table
-        :data="tableData"
-        id="table"
-        height="700"
-    >
+<section>
+  <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <el-form :inline="true" >
+      <el-form-item>
+        <el-button type="primary" v-on:click="getUser" class="el-icon-refresh">刷新</el-button>
+      </el-form-item>
+    </el-form>
+  </el-col> -->
+    <template>
+      <el-table
+          :data="tableData"
+          id="table"
+      >
+        <el-table-column type="index" width="100"></el-table-column>
         <el-table-column type="expand">
             <template slot-scope="props">
                 <el-form
@@ -12,7 +21,7 @@
                     class="demo-table-expand"
                 >
                     <el-form-item label="姓名">
-                        <span>{{ props.row.name }}</span>
+                        <span>{{ props.row.nickname }}</span>
                     </el-form-item>
                     <el-form-item label="用户 ID">
                         <span>{{ props.row.id }}</span>
@@ -41,13 +50,13 @@
                 </el-form>
             </template>
         </el-table-column>
-        <el-table-column label="用户 ID" prop="id" sortable>
+        <el-table-column label="用户 ID" prop="user_id" width="200" sortable>
         </el-table-column>
-        <el-table-column label="用户姓名" prop="name" sortable>
+        <el-table-column label="用户昵称" prop="nickname" width="220" sortable>
         </el-table-column>
-        <el-table-column label="性别" prop="gender" sortable>
+        <el-table-column label="身份类别" prop="identity" width="220" :formatter="formatSex" sortable>
         </el-table-column>
-        <el-table-column label="身份类别" prop="type" sortable>
+        <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
         </el-table-column>
         <el-table-column label="操作">
             <template slot-scope="scope">
@@ -63,7 +72,20 @@
                 >拒绝</el-button>
             </template>
         </el-table-column>
-    </el-table>
+      </el-table>
+      <!--工具条-->
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="100"
+          layout="total, prev, pager, next, jumper"
+          :total="length">
+        </el-pagination>
+      </div>
+    </template>
+  </section>
 </template>
 
 <style>
@@ -81,54 +103,61 @@
 }
 #table {
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 </style>
 
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
-      tableData: [{
-        id: '12987122',
-        name: '谷雨',
-        gender: '男',
-        type: '学生',
-        org: '中山大学',
-        num: '16341006',
-        tel: '13169766411',
-        email: '53461616@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }, {
-        id: '12987123',
-        name: '蒋侑生',
-        gender: '男',
-        type: '企业人员',
-        org: '大山企业',
-        num: '1546221',
-        tel: '13169746411',
-        email: '123124216@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }, {
-        id: '12987122',
-        name: '蒋侑生',
-        gender: '女',
-        type: '企业人员',
-        org: '大山企业',
-        num: '1546221',
-        tel: '13169746411',
-        email: '123124216@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }]
+      currentPage: 1,
+      length: 0,
+      tableData: []
     }
   },
+  created () {
+    axios.post('/api/v1/get_users', {
+      user_type: 'all',
+      page: 0
+    }).then((response) => {
+      var data = JSON.parse(response.data.data)
+      this.length = data.length
+      this.tableData = data
+      console.log(data)
+    }).catch(function (err) {
+      console.log(err)
+    })
+  },
   methods: {
+    getUser () {
+      console.log('123')
+      axios.post('/api/v1/get_users', {
+        user_type: 'all',
+        page: 0
+      }).then((response) => {
+        var data = JSON.parse(response.data.data)
+        this.tableData = data
+        console.log(data)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    formatSex: function (row, column) {
+      return row.identity === 'S' ? '学生' : '企业人员'
+    },
     handlePass (index, row) {
       console.log(index, row)
     },
     handleReject (index, row) {
       console.log(index, row)
+    },
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
     }
   }
 }

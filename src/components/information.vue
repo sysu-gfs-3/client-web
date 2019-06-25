@@ -9,13 +9,13 @@
           <el-input v-model="form.nickname"></el-input>
         </el-form-item>
         <el-form-item prop="name" label="姓名">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
         <el-form-item prop="email" label="邮箱">
-          <el-input v-model="form.email"></el-input>
+          <el-input v-model="form.email" disabled></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSaveProfile">修改并保存</el-button>
+          <el-button type="primary">修改并保存</el-button>
         </el-form-item>
       </el-form>
     </el-col>
