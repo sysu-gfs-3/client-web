@@ -11,7 +11,6 @@
       <el-table
           :data="tableData"
           id="table"
-          :row-class-name="tableRowClassName"
       >
         <el-table-column type="index" width="100"></el-table-column>
         <el-table-column type="expand" @click="details">
@@ -22,43 +21,36 @@
                     class="demo-table-expand"
                     @click="details"
                 >
-                    <el-form-item label="姓名">
-                        <span>{{ props.row.nickname }}</span>
+                    <el-form-item label="报名开始时间">
+                        <span>{{ props.row.sign_end_time }}</span>
                     </el-form-item>
-                    <el-form-item label="用户 ID">
-                        <span>{{ props.row.id }}</span>
+                    <el-form-item label="报名截止时间">
+                        <span>{{ props.row.sign_end_time }}</span>
                     </el-form-item>
-                    <el-form-item label="性别">
+                    <el-form-item label="最大需要参与人数">
+                        <span>{{ props.row.max_num }}</span>
+                    </el-form-item>
+                    <el-form-item label="目前参与人数">
+                        <span>{{ props.row.participants_num }}</span>
+                    </el-form-item>
+                    <el-form-item label="奖励">
+                        <span>{{ props.row.money }}</span>
+                    </el-form-item>
+                    <el-form-item label="描述">
                         <span>{{ props.row.gender }}</span>
-                    </el-form-item>
-                    <el-form-item label="类别">
-                        <span>{{ props.row.type }}</span>
-                    </el-form-item>
-                    <el-form-item label="学校/公司">
-                        <span>{{ props.row.org }}</span>
-                    </el-form-item>
-                    <el-form-item label="学号/工号">
-                        <span>{{ props.row.num }}</span>
-                    </el-form-item>
-                    <el-form-item label="联系电话">
-                        <span>{{ props.row.tle }}</span>
-                    </el-form-item>
-                    <el-form-item label="邮箱">
-                        <span>{{ props.row.email }}</span>
-                    </el-form-item>
-                    <el-form-item label="证明">
-                        <el-image :src="props.row.cert"></el-image>
                     </el-form-item>
                 </el-form>
             </template>
         </el-table-column>
-        <el-table-column label="用户 ID" prop="user_id" width="200" sortable>
+        <el-table-column label="任务 ID" prop="task_id" sortable>
         </el-table-column>
-        <el-table-column label="用户昵称" prop="nickname" width="220" sortable>
+        <el-table-column label="用户昵称" prop="title" sortable>
         </el-table-column>
-        <el-table-column label="身份类别" prop="identity" width="220" :formatter="formatSex" sortable>
+        <el-table-column label="任务类别" prop="type" :formatter="formatType" sortable>
         </el-table-column>
-        <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
+        <el-table-column label="任务状态" prop="state" sortable>
+        </el-table-column>
+        <el-table-column label="发布时间" prop="release_time" sortable>
         </el-table-column>
         <el-table-column label="操作">
             <template slot-scope="scope">
@@ -95,7 +87,7 @@
   font-size: 0;
 }
 .demo-table-expand label {
-  width: 90px;
+  width: 150px;
   color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
@@ -103,16 +95,12 @@
   margin-bottom: 0;
   width: 50%;
 }
+.el-form-item {
+  width: 1000px;
+}
 #table {
   width: 100%;
   overflow: hidden;
-}
-.el-table .warning-row {
-  background: oldlace
-}
-
-.el-table .success-row {
-  background: #f0f9eb
 }
 </style>
 
@@ -127,14 +115,23 @@ export default {
     }
   },
   created () {
-    axios.post('/api/v1/get_users', {
-      user_type: 'all',
+    axios.post('/api/v1/get_task', {
+      task_type: 'all',
       page: 0
     }).then((response) => {
       var data = JSON.parse(response.data.data)
       this.length = data.length
       this.tableData = data
       console.log(data)
+    }).catch(function (err) {
+      console.log(err)
+    })
+    axios.post('/api/v1/get_task_count', {
+      task_type: 'all'
+    }).then((response) => {
+      var data = JSON.parse(response.data.data)
+      this.length = data.count
+      // console.log(data)
     }).catch(function (err) {
       console.log(err)
     })
@@ -153,7 +150,7 @@ export default {
     //     console.log(err)
     //   })
     // },
-    formatSex (row, column) {
+    formatType: function (row, column) {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
     details (index, row) {
@@ -179,14 +176,6 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
-    },
-    tableRowClassName ({row, rowIndex}) {
-      if (row.identity === 'S') {
-        return 'warning-row'
-      } else if (row.identity === 'C') {
-        return 'success-row'
-      }
-      return ''
     }
   }
 }

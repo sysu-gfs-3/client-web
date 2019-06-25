@@ -6,6 +6,8 @@ import Identity from '@/components/identity'
 import userlist from '@/components/user_list'
 import information from '@/components/information'
 import changepwd from '@/components/changepwd'
+import taskexam from '@/components/task_exam'
+import tasklist from '@/components/task_list'
 
 Vue.use(Router)
 
@@ -30,16 +32,16 @@ export default new Router({
         name: '用户列表',
         component: userlist
       },
-      // {
-      //   path: '/首页/个人信息',
-      //   name: '个人信息',
-      //   component: information
-      // },
-      // {
-      //   path: '/首页/个人信息',
-      //   name: '个人信息',
-      //   component: information
-      // },
+      {
+        path: '/首页/任务审核',
+        name: '任务审核',
+        component: taskexam
+      },
+      {
+        path: '/首页/任务目录',
+        name: '任务目录',
+        component: tasklist
+      },
       {
         path: '/首页/个人信息',
         name: '个人信息',

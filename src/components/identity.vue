@@ -1,18 +1,22 @@
 <template>
-    <el-table
-        :data="tableData"
-        id="table"
-        height="700"
-    >
-        <el-table-column type="expand">
+<section>
+    <template>
+      <el-table
+          :data="tableData"
+          id="table"
+          :row-class-name="tableRowClassName"
+      >
+        <el-table-column type="index" width="100"></el-table-column>
+        <el-table-column type="expand" @click="details(props.row.id)">
             <template slot-scope="props">
                 <el-form
                     label-position="left"
                     inline
                     class="demo-table-expand"
+                    @click="details(props.row.id)"
                 >
                     <el-form-item label="姓名">
-                        <span>{{ props.row.name }}</span>
+                        <span>{{ props.row.nickname }}</span>
                     </el-form-item>
                     <el-form-item label="用户 ID">
                         <span>{{ props.row.id }}</span>
@@ -30,7 +34,7 @@
                         <span>{{ props.row.num }}</span>
                     </el-form-item>
                     <el-form-item label="联系电话">
-                        <span>{{ props.row.tel }}</span>
+                        <span>{{ props.row.tle }}</span>
                     </el-form-item>
                     <el-form-item label="邮箱">
                         <span>{{ props.row.email }}</span>
@@ -41,32 +45,20 @@
                 </el-form>
             </template>
         </el-table-column>
-        <el-table-column
-            label="用户 ID"
-            prop="id"
-        >
+        <el-table-column label="用户 ID" prop="user_id" width="200" sortable>
         </el-table-column>
-        <el-table-column
-            label="用户姓名"
-            prop="name"
-        >
+        <el-table-column label="用户昵称" prop="nickname" width="220" sortable>
         </el-table-column>
-        <el-table-column
-            label="性别"
-            prop="gender"
-        >
+        <el-table-column label="身份类别" prop="identity" width="220" :formatter="formatSex" sortable>
         </el-table-column>
-        <el-table-column
-            label="身份类别"
-            prop="type"
-        >
+        <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
         </el-table-column>
         <el-table-column label="操作">
             <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handlePass(scope.$index, scope.row)"
+                    @click="handleReject(scope.$index, scope.row)"
                 >通过</el-button>
                 <el-button
                     size="mini"
@@ -75,7 +67,20 @@
                 >拒绝</el-button>
             </template>
         </el-table-column>
-    </el-table>
+      </el-table>
+      <!--工具条-->
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="100"
+          layout="total, prev, pager, next, jumper"
+          :total="length">
+        </el-pagination>
+      </div>
+    </template>
+  </section>
 </template>
 
 <style>
@@ -93,54 +98,84 @@
 }
 #table {
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
-</style>
+.el-table .warning-row {
+  background: oldlace
+}
 
+.el-table .success-row {
+  background: #f0f9eb
+}
+</style>
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
-      tableData: [{
-        id: '12987122',
-        name: '谷雨',
-        gender: '男',
-        type: '学生',
-        org: '中山大学',
-        num: '16341006',
-        tel: '13169766411',
-        email: '53461616@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }, {
-        id: '12987123',
-        name: '蒋侑生',
-        gender: '男',
-        type: '企业人员',
-        org: '大山企业',
-        num: '1546221',
-        tel: '13169746411',
-        email: '123124216@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }, {
-        id: '12987122',
-        name: '蒋侑生',
-        gender: '女',
-        type: '企业人员',
-        org: '大山企业',
-        num: '1546221',
-        tel: '13169746411',
-        email: '123124216@qq.com',
-        cert: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      }]
+      currentPage: 1,
+      length: 0,
+      tableData: [],
+      exData: []
     }
   },
+  created () {
+    axios.post('/api/v1/get_users', {
+      user_type: 'waiting',
+      page: 0
+    }).then((response) => {
+      var data = JSON.parse(response.data.data)
+      this.tableData = data
+      // console.log(data)
+    }).catch(function (err) {
+      console.log(err)
+    })
+    axios.post('/api/v1/get_user_count', {
+      user_type: 'waiting'
+    }).then((response) => {
+      var data = JSON.parse(response.data.data)
+      this.length = data.count
+      // console.log(data)
+    }).catch(function (err) {
+      console.log(err)
+    })
+  },
   methods: {
+    formatSex: function (row, column) {
+      return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
+    },
+    details (row) {
+      console.log(row)
+      axios.post('/api/v1/get_user_info', {
+        user_id: row.user_id,
+        identity: row.identity
+      }).then((response) => {
+        var data = JSON.parse(response.data.data)
+        // this.tableData = data
+        console.log(data)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     handlePass (index, row) {
       console.log(index, row)
     },
     handleReject (index, row) {
       console.log(index, row)
+    },
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+    },
+    tableRowClassName ({row, rowIndex}) {
+      if (row.identity === 'S') {
+        return 'warning-row'
+      } else if (row.identity === 'C') {
+        return 'success-row'
+      }
+      return ''
     }
   }
 }
