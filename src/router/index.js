@@ -8,6 +8,7 @@ import information from '@/components/information'
 import changepwd from '@/components/changepwd'
 import taskexam from '@/components/task_exam'
 import tasklist from '@/components/task_list'
+import main from '@/components/home'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       name: '首页',
       component: index,
       children: [{
+        path: '/首页/主页',
+        name: '主页',
+        component: main
+      },
+      {
         path: '/首页/用户审核',
         name: '用户审核',
         component: Identity

@@ -17,6 +17,9 @@
             <span>蒋侑伸</span>
             <el-dropdown trigger="click">
               <i class="el-icon-setting" style="margin-left: 15px"></i>
+              <!-- <el-tooltip class="item" effect="dark" content="点击查看用户详情" placement="right">
+                <span class="el-icon-info" @click="dialogVisible = true;details(props.$index, props.row)"></span>
+              </el-tooltip> -->
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
                   <div @click="jumpTo('/首页/个人信息')"><span>个人信息</span></div>
@@ -37,7 +40,7 @@
               <el-radio-button :label="false"><i type="primary" class="el-icon-s-unfold" ></i></el-radio-button>
               <el-radio-button :label="true"><i type="primary" class="el-icon-s-fold" ></i></el-radio-button>
             </el-radio-group>
-            <el-menu-item index="/首页">
+            <el-menu-item index="/首页/主页">
               <i class="el-icon-s-home"></i>
               <span slot="title">首页</span>
             </el-menu-item>

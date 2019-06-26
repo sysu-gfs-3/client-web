@@ -99,7 +99,7 @@ export default {
                   message: '欢迎您  ' + data.name,
                   type: 'success'
                 })
-                this.$router.push({ path: '/首页' })
+                this.$router.push({ path: '/首页/主页' })
                 // console.log(data)
               } else {
                 if (response.data.message === 'wrong password') {
