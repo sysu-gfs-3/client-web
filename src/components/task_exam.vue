@@ -37,7 +37,7 @@
                         <span>{{ props.row.money }}</span>
                     </el-form-item>
                     <el-form-item label="描述">
-                        <span>{{ props.row.gender }}</span>
+                        <span>{{ props.row.task_intro }}</span>
                     </el-form-item>
                 </el-form>
             </template>

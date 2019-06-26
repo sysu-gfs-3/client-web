@@ -53,17 +53,17 @@
         </el-table-column>
         <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="250">
             <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handleReject(scope.$index, scope.row)"
+                    @click="handlePass(scope.row)"
                 >通过</el-button>
                 <el-button
                     size="mini"
                     type="danger"
-                    @click="handleReject(scope.$index, scope.row)"
+                    @click="handleReject(scope.row)"
                 >拒绝</el-button>
             </template>
         </el-table-column>
@@ -144,25 +144,37 @@ export default {
     formatSex: function (row, column) {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
-    details (row) {
+    handleReject (row) {
       console.log(row)
-      axios.post('/api/v1/get_user_info', {
+      axios.post('/api/v1/audit_user', {
         user_id: row.user_id,
-        identity: row.identity
+        identity: row.identity,
+        audit: false
       }).then((response) => {
-        var data = JSON.parse(response.data.data)
+        // var data = JSON.parse(response.data.data)
         // this.tableData = data
-        console.log(data)
+        console.log(response.data)
       }).catch(function (err) {
         console.log(err)
       })
     },
-    handlePass (index, row) {
-      console.log(index, row)
+    handlePass (row) {
+      console.log(row)
+      axios.post('/api/v1/audit_user', {
+        user_id: row.user_id,
+        identity: row.identity,
+        audit: true
+      }).then((response) => {
+        // var data = JSON.parse(response.data.data)
+        // this.tableData = data
+        console.log(response.data)
+      }).catch(function (err) {
+        console.log(err)
+      })
     },
-    handleReject (index, row) {
-      console.log(index, row)
-    },
+    // handleReject (index, row) {
+    //   console.log(index, row)
+    // },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
     },

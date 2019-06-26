@@ -2,15 +2,18 @@
   <div id="container">
     <el-container>
       <el-header id="title">
-        <el-col :span="24" class="header">
+        <el-col fixed :span="24" class="header">
           <el-col :span="3" class="logo">挣闲钱后台系统</el-col>
-          <el-col :span="16">
-            <div class="tools">
-              <i type="primary" class="el-icon-s-fold"></i>
+          <!-- <el-col :span="16">
+            <div class="tools" @click.prevent="collapse">
+              <i type="primary" class="el-icon-s-fold" ></i>
             </div>
-          </el-col>
+          </el-col> -->
           <el-col :span="4" class="userinfo">
             <i type="primary" class="el-icon-user-solid"></i>
+            <!-- <div class="demo-basic--circle">
+              <div class="block"><el-avatar :size="50" :src="circleUrl"></el-avatar></div>
+            </div> -->
             <span>蒋侑伸</span>
             <el-dropdown trigger="click">
               <i class="el-icon-setting" style="margin-left: 15px"></i>
@@ -28,10 +31,12 @@
         </el-col>
       </el-header>
       <el-main>
-        <div class="aside-col">
-          <el-menu class="menu" :default-active="$route.path" router>
-            <el-menu-item>
-            </el-menu-item>
+        <div :class="isCollapse?'aside-col-extand':'aside-col'">
+          <el-menu class="menu" :default-active="$route.path" router @open="handleOpen" @close="handleClose" :collapse="isCollapse" :unique-opened="true">
+            <el-radio-group v-model="isCollapse" style="margin-top: 5px;">
+              <el-radio-button :label="false"><i type="primary" class="el-icon-s-unfold" ></i></el-radio-button>
+              <el-radio-button :label="true"><i type="primary" class="el-icon-s-fold" ></i></el-radio-button>
+            </el-radio-group>
             <el-menu-item index="/首页">
               <i class="el-icon-s-home"></i>
               <span slot="title">首页</span>
@@ -68,7 +73,7 @@
             </el-submenu>
           </el-menu>
         </div>
-        <div class="main-col">
+        <div :class="isCollapse?'main-col-extand':'main-col'">
           <el-row :span="24">
             <el-col :span="12">
               <strong class="grid-content" id="m_tittle">{{$route.name}}</strong>
@@ -93,11 +98,13 @@
 <script>
 import Identity from '../components/identity'
 export default {
+  name: 'Index',
   components: {
     identity: Identity
   },
   data () {
     return {
+      // circleUrl: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       isCollapse: true
     }
   },
@@ -154,7 +161,6 @@ export default {
   text-align: center;
   line-height: 200px;
 }
-
 .el-main {
   background-color: #FFFFFF;
   color: #333;
@@ -174,6 +180,10 @@ body > .el-container {
 .el-col {
   border-radius: 4px;
 }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
@@ -186,12 +196,25 @@ body > .el-container {
   float: left;
   width: 200px;
 }
+.aside-col-extand {
+  display: inline-block;
+  float: left;
+  width: 50px;
+}
 .main-col {
   /* position: fixed; */
   left: 200px;
   display: inline-block;
   padding-top: 10px;
   width: calc(100% - 200px);
+  height: 100vh;
+}
+.main-col-extand {
+  /* position: fixed; */
+  left: 200px;
+  display: inline-block;
+  padding-top: 10px;
+  width: calc(100% - 90px);
   height: 100vh;
 }
 #el-menu-item {

@@ -96,7 +96,7 @@ export default {
                 var data = JSON.parse(response.data.data)
                 this.$notify({
                   title: '登录成功',
-                  message: '欢迎您' + data.name,
+                  message: '欢迎您  ' + data.name,
                   type: 'success'
                 })
                 this.$router.push({ path: '/首页' })

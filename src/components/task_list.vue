@@ -13,14 +13,18 @@
           id="table"
       >
         <el-table-column type="index" width="100"></el-table-column>
-        <el-table-column type="expand" @click="details">
+        <el-table-column type="expand" >
             <template slot-scope="props">
                 <el-form
                     label-position="left"
                     inline
                     class="demo-table-expand"
-                    @click="details"
                 >
+                    <el-form-item label="发布者">
+                      <el-tooltip class="item" effect="dark" content="点击查看用户详情" placement="right">
+                        <span class="el-icon-info" @click="dialogVisible = true;details(props.$index, props.row)"></span>
+                      </el-tooltip>
+                    </el-form-item>
                     <el-form-item label="报名开始时间">
                         <span>{{ props.row.sign_end_time }}</span>
                     </el-form-item>
@@ -37,14 +41,14 @@
                         <span>{{ props.row.money }}</span>
                     </el-form-item>
                     <el-form-item label="描述">
-                        <span>{{ props.row.gender }}</span>
+                        <span>{{ props.row.task_intro }}</span>
                     </el-form-item>
                 </el-form>
             </template>
         </el-table-column>
         <el-table-column label="任务 ID" prop="task_id" sortable>
         </el-table-column>
-        <el-table-column label="用户昵称" prop="title" sortable>
+        <el-table-column label="任务名" prop="title" sortable>
         </el-table-column>
         <el-table-column label="任务类别" prop="type" :formatter="formatType" sortable>
         </el-table-column>
@@ -52,20 +56,15 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="release_time" sortable>
         </el-table-column>
-        <el-table-column label="操作">
+        <!-- <el-table-column label="操作">
             <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
                     @click="details(scope.$index, scope.row)"
-                >通过</el-button>
-                <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleReject(scope.$index, scope.row)"
-                >拒绝</el-button>
+                >详情</el-button>
             </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <!--工具条-->
       <div class="block">
@@ -79,6 +78,44 @@
         </el-pagination>
       </div>
     </template>
+    <el-dialog
+      title="发布者信息"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <el-form ref="form" label-width="100px">
+        <el-form-item label="名称:">
+          <span class="user_info">{{form.name}}</span>
+        </el-form-item>
+        <el-form-item label="用户名:">
+          <span class="user_info">{{form.nickname}}</span>
+        </el-form-item>
+        <el-form-item label="性别:">
+          <span class="user_info">{{form.gender}}</span>
+        </el-form-item>
+        <el-form-item label="身份:">
+          <span class="user_info">{{form.identity}}</span>
+        </el-form-item>
+        <el-form-item label="学号/工号:">
+          <span class="user_info">{{form.number}}</span>
+        </el-form-item>
+        <el-form-item label="信用度:">
+          <span class="user_info">{{form.name}}</span>
+        </el-form-item>
+        <el-form-item label="余额:">
+          <span class="user_info">{{form.name}}</span>
+        </el-form-item>
+        <el-form-item label="所属组织:">
+          <span class="user_info">{{form.orgnization}}</span>
+        </el-form-item>
+        <el-form-item label="手机号:">
+          <span class="user_info">{{form.phone_number}}</span>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false;">确 定</el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -102,6 +139,15 @@
   width: 100%;
   overflow: hidden;
 }
+.user_info {
+  text-align: left;
+  padding-left: 10px;
+  float: left;
+}
+.right {
+  float: right;
+  width: 60px;
+}
 </style>
 
 <script>
@@ -109,6 +155,19 @@ import axios from 'axios'
 export default {
   data () {
     return {
+      form: {
+        name: '',
+        nickname: '',
+        identity: '',
+        number: '',
+        orgnization: '',
+        phone_number: '',
+        email: '',
+        balance: '',
+        credit: '',
+        gender: ''
+      },
+      dialogVisible: false,
       currentPage: 1,
       length: 0,
       tableData: []
@@ -154,13 +213,33 @@ export default {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
     details (index, row) {
+      console.log(row)
       axios.post('/api/v1/get_user_info', {
-        user_id: row.user_id,
-        identity: row.identity
+        user_id: row.publish_id
+        // identity: row.identity
       }).then((response) => {
         var data = JSON.parse(response.data.data)
-        // this.tableData = data
-        console.log(data)
+        this.form.name = data.name
+        this.form.nickname = data.nickname
+        if (data.identity === 'S') {
+          this.form.identity = '学生'
+          this.form.number = data.student_num
+          this.form.orgnization = data.school
+        } else {
+          this.form.identity = '企业人员'
+          this.form.number = data.job_num
+          this.form.orgnization = data.company
+        }
+        if (data.gender === 'W') {
+          this.form.gender = '女'
+        } else {
+          this.form.gender = '男'
+        }
+        this.form.phone_number = data.phone_number
+        this.form.email = data.email
+        // this.form.balance = data.balance
+        // this.form.credit = data.credit
+        console.log(row)
       }).catch(function (err) {
         console.log(err)
       })
@@ -176,6 +255,13 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
+    },
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
     }
   }
 }

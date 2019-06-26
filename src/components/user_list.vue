@@ -60,18 +60,13 @@
         </el-table-column>
         <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="300">
             <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="details(scope.$index, scope.row)"
-                >通过</el-button>
-                <el-button
-                    size="mini"
-                    type="danger"
                     @click="handleReject(scope.$index, scope.row)"
-                >拒绝</el-button>
+                >详情</el-button>
             </template>
         </el-table-column>
       </el-table>
