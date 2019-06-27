@@ -13,7 +13,7 @@
           id="table"
       >
         <el-table-column type="index" width="100"></el-table-column>
-        <el-table-column type="expand" >
+        <el-table-column type="expand">
             <template slot-scope="props">
                 <el-form
                     label-position="left"
@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column label="任务类别" prop="type" :formatter="formatType" sortable>
         </el-table-column>
-        <el-table-column label="任务状态" prop="state" sortable>
+        <el-table-column label="任务状态" prop="state" :formatter="formatState" sortable>
         </el-table-column>
         <el-table-column label="发布时间" prop="release_time" sortable>
         </el-table-column>
@@ -210,7 +210,10 @@ export default {
     //   })
     // },
     formatType: function (row, column) {
-      return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
+      return row.type === 'W' ? '问卷调查' : '普通任务'
+    },
+    formatState: function (row, column) {
+      return row.state === 'W' ? '待审核' : row.state === 'S' ? '任务进行中' : row.state === 'F' ? '审核失败' : '任务完成'
     },
     details (index, row) {
       // console.log(row)

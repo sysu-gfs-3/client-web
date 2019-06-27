@@ -12,6 +12,7 @@
           :data="tableData"
           id="table"
           :row-class-name="tableRowClassName"
+          position="absolute"
       >
         <el-table-column type="index" width="100"></el-table-column>
         <el-table-column type="expand" @click="details">
@@ -65,7 +66,7 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handleReject(scope.$index, scope.row)"
+                    @click="details (scope.$index, scope.row)"
                 >详情</el-button>
             </template>
         </el-table-column>
@@ -152,6 +153,7 @@ export default {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
     details (index, row) {
+      console.log(row)
       axios.post('/api/v1/get_user_info', {
         user_id: row.user_id,
         identity: row.identity

@@ -27,7 +27,9 @@
                 <el-dropdown-item>
                   <div @click="jumpTo('/首页/修改密码')"><span>修改密码</span></div>
                 </el-dropdown-item>
-                <el-dropdown-item divided>退出登录</el-dropdown-item>
+                <el-dropdown-item divided>
+                  <div @click="jumpTo('/')"><span>退出登录</span></div>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-col>
@@ -115,6 +117,7 @@ export default {
     jumpTo (url) {
       console.log('123')
       this.$router.push(url) // 用go刷新
+      this.$router.go(0)
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)

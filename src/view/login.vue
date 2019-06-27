@@ -39,7 +39,6 @@
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-button @click="test">123</el-button>
     </el-main>
   </div>
 </template>
