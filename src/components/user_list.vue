@@ -139,8 +139,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
-        
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false;reform()">确 定</el-button>
@@ -276,23 +274,23 @@ export default {
           this.form.identity = '学生'
           this.form.number = data.student_num
           this.form.orgnization = data.school
-        } else if (data.identity === 'C'){
+        } else if (data.identity === 'C') {
           this.form.identity = '企业人员'
           this.form.number = data.job_num
           this.form.orgnization = data.company
         }
         if (data.isprove === 'W') {
           this.form.state = '审核中'
-        } else if (data.isprove  === 'P'){
+        } else if (data.isprove === 'P') {
           this.form.state = '已审核'
-        } else if (data.isprove  === 'F'){
+        } else if (data.isprove === 'F') {
           this.form.state = '审核未通过'
         } else {
           this.form.state = '未审核'
         }
         console.log(response)
       }).catch(function (err) {
-        reform() 
+        this.reform()
         console.log(err)
       })
     },
