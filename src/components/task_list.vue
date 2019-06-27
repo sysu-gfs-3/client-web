@@ -8,6 +8,9 @@
     </el-form>
   </el-col> -->
     <template>
+      <el-col :span="1" >
+        <el-button float="right" text-align="right" padding-left="35px" type="primary" icon="el-icon-refresh" circle @click="jumpTo('/首页/用户目录')"></el-button>
+      </el-col>
       <el-table
           :data="tableData"
           id="table"
@@ -209,6 +212,9 @@ export default {
     //     console.log(err)
     //   })
     // },
+    jumpTo (url) {
+      this.$router.go(0) // 用go刷新
+    },
     formatType: function (row, column) {
       return row.type === 'W' ? '问卷调查' : '普通任务'
     },

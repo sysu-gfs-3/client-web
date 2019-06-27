@@ -1,13 +1,17 @@
 <template>
 <section>
     <template>
+      <el-col :span="1" >
+          <el-button float="right" text-align="right" padding-left="35px" type="primary" icon="el-icon-refresh" circle @click="jumpTo('/首页/用户审核')"></el-button>
+      </el-col>
+      <el-col :span="22" :offset="22"></el-col>
       <el-table
           :data="tableData"
           id="table"
           :row-class-name="tableRowClassName"
       >
         <el-table-column type="index" width="100"></el-table-column>
-        <el-table-column type="expand" @click="details(props.row.id)">
+        <!-- <el-table-column type="expand" @click="details(props.row.id)">
             <template slot-scope="props">
                 <el-form
                     label-position="left"
@@ -44,7 +48,7 @@
                     </el-form-item>
                 </el-form>
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="用户 ID" prop="user_id" width="200" sortable>
         </el-table-column>
         <el-table-column label="用户昵称" prop="nickname" width="220" sortable>
@@ -58,12 +62,12 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handlePass(scope.row)"
+                    @click="handlePass(scope.row);jumpTo()"
                 >通过</el-button>
                 <el-button
                     size="mini"
                     type="danger"
-                    @click="handleReject(scope.row)"
+                    @click="handleReject(scope.row);jumpTo()"
                 >拒绝</el-button>
             </template>
         </el-table-column>
@@ -141,6 +145,9 @@ export default {
     })
   },
   methods: {
+    jumpTo (url) {
+      this.$router.go(0) // 用go刷新
+    },
     formatSex: function (row, column) {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
@@ -153,6 +160,9 @@ export default {
       }).then((response) => {
         // var data = JSON.parse(response.data.data)
         // this.tableData = data
+        this.$notify.error({
+          title: '已拒绝' + row.nickname + '审核'
+        })
         console.log(response.data)
       }).catch(function (err) {
         console.log(err)
@@ -167,6 +177,10 @@ export default {
       }).then((response) => {
         // var data = JSON.parse(response.data.data)
         // this.tableData = data
+        this.$notify({
+          title: row.nickname + '审核通过',
+          type: 'success'
+        })
         console.log(response.data)
       }).catch(function (err) {
         console.log(err)

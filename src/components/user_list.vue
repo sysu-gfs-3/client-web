@@ -8,6 +8,9 @@
     </el-form>
   </el-col> -->
     <template>
+      <el-col :span="1" >
+          <el-button float="right" text-align="right" padding-left="35px" type="primary" icon="el-icon-refresh" circle @click="jumpTo('/首页/用户列表')"></el-button>
+      </el-col>
       <el-table
           :data="tableData"
           id="table"
@@ -15,7 +18,7 @@
           position="absolute"
       >
         <el-table-column type="index" width="100"></el-table-column>
-        <el-table-column type="expand" @click="details">
+        <!-- <el-table-column type="expand" @click="details">
             <template slot-scope="props">
                 <el-form
                     label-position="left"
@@ -52,16 +55,16 @@
                     </el-form-item>
                 </el-form>
             </template>
+        </el-table-column> -->
+        <el-table-column label="用户 ID" prop="user_id" sortable>
         </el-table-column>
-        <el-table-column label="用户 ID" prop="user_id" width="200" sortable>
+        <el-table-column label="用户昵称" prop="nickname" sortable>
         </el-table-column>
-        <el-table-column label="用户昵称" prop="nickname" width="220" sortable>
+        <el-table-column label="身份类别" prop="identity" :formatter="formatSex" sortable>
         </el-table-column>
-        <el-table-column label="身份类别" prop="identity" width="220" :formatter="formatSex" sortable>
+        <el-table-column label="申请审核时间" prop="create_date" sortable>
         </el-table-column>
-        <el-table-column label="申请审核时间" prop="create_date" width="270" sortable>
-        </el-table-column>
-        <el-table-column label="操作" width="300">
+        <el-table-column label="操作">
             <template slot-scope="scope">
                 <el-button
                     size="mini"
@@ -84,7 +87,7 @@
       </div>
     </template>
     <el-dialog
-      title="发布者信息"
+      title="用户信息"
       :visible.sync="dialogVisible"
       :showClose="false"
       width="60%">
@@ -236,6 +239,9 @@ export default {
     //     console.log(err)
     //   })
     // },
+    jumpTo () {
+      this.$router.go(0) // 用go刷新
+    },
     formatSex (row, column) {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
@@ -290,7 +296,6 @@ export default {
         }
         console.log(response)
       }).catch(function (err) {
-        this.reform()
         console.log(err)
       })
     },

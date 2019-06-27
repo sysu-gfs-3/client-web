@@ -8,6 +8,9 @@
     </el-form>
   </el-col> -->
     <template>
+      <el-col :span="1" >
+        <el-button float="right" text-align="right" padding-left="35px" type="primary" icon="el-icon-refresh" circle @click="jumpTo('/首页/任务审核')"></el-button>
+      </el-col>
       <el-table
           :data="tableData"
           id="table"
@@ -59,12 +62,12 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handlePass(scope.$index, scope.row)"
+                    @click="handlePass(scope.$index, scope.row);jumpTo()"
                 >通过</el-button>
                 <el-button
                     size="mini"
                     type="danger"
-                    @click="handleReject(scope.row)"
+                    @click="handleReject(scope.row);jumpTo()"
                 >拒绝</el-button>
             </template>
         </el-table-column>
@@ -213,6 +216,9 @@ export default {
     //     console.log(err)
     //   })
     // },
+    jumpTo (url) {
+      this.$router.go(0) // 用go刷新
+    },
     formatType: function (row, column) {
       return row.type === 'W' ? '问卷调查' : '普通任务'
     },
@@ -264,7 +270,7 @@ export default {
       })
     },
     handleReject (row) {
-      // console.log(row.task_id)
+      console.log(row.task_id)
       axios.post('/api/v1/audit_task', {
         task_id: row.task_id,
         audit: false
