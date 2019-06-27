@@ -66,7 +66,7 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="details (scope.$index, scope.row)"
+                    @click="dialogVisible = true;details (scope.$index, scope.row)"
                 >详情</el-button>
             </template>
         </el-table-column>
@@ -83,6 +83,69 @@
         </el-pagination>
       </div>
     </template>
+    <el-dialog
+      title="发布者信息"
+      :visible.sync="dialogVisible"
+      :showClose="false"
+      width="60%">
+      <el-form ref="form" label-width="120px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="名称:" margin-left="2px">
+              <span class="user_info" >{{form.name}}</span>
+            </el-form-item>
+            <el-form-item label="用户名:">
+              <span class="user_info">{{form.nickname}}</span>
+            </el-form-item>
+            <el-form-item label="微信 ID:">
+              <span class="user_info">{{form.wechat_id}}</span>
+            </el-form-item>
+            <el-form-item label="性别:">
+              <span class="user_info">{{form.gender}}</span>
+            </el-form-item>
+            <el-form-item label="身份:">
+              <span class="user_info">{{form.identity}}</span>
+            </el-form-item>
+            <el-form-item label="学号/工号:">
+              <span class="user_info">{{form.number}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="信用度:">
+              <span class="user_info">{{form.credit}}</span>
+            </el-form-item>
+            <el-form-item label="余额:">
+              <span class="user_info">{{form.balance}}</span>
+            </el-form-item>
+            <el-form-item label="所属组织:">
+              <span class="user_info">{{form.orgnization}}</span>
+            </el-form-item>
+            <el-form-item label="手机号:">
+              <span class="user_info">{{form.phone_number}}</span>
+            </el-form-item>
+            <el-form-item label="审核状态:">
+              <span class="user_info">{{form.state}}</span>
+            </el-form-item>
+            <el-form-item label="申请时间:">
+              <span class="user_info">{{form.time}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="介绍:">
+              <span class="user_info">{{form.intro}}</span>
+            </el-form-item>
+            <el-form-item label="证明材料:">
+              <el-image class="user_info" :src="form.prove"></el-image>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false;reform()">确 定</el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -106,9 +169,17 @@
 .el-table .warning-row {
   background: oldlace
 }
-
 .el-table .success-row {
   background: #f0f9eb
+}
+.user_info {
+  text-align: left;
+  padding-left: 1px;
+  float: left;
+}
+.right {
+  float: right;
+  width: 60px;
 }
 </style>
 
@@ -117,6 +188,24 @@ import axios from 'axios'
 export default {
   data () {
     return {
+      form: {
+        name: '',
+        nickname: '',
+        identity: '',
+        number: '',
+        orgnization: '',
+        phone_number: '',
+        email: '',
+        balance: '',
+        credit: '',
+        gender: '',
+        prove: '',
+        intro: '',
+        wechat_id: '',
+        state: '',
+        time: ''
+      },
+      dialogVisible: false,
       currentPage: 1,
       length: 0,
       tableData: []
@@ -152,16 +241,58 @@ export default {
     formatSex (row, column) {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
+    reform () {
+      this.form.name = ''
+      this.form.phone_number = ''
+      this.form.email = ''
+      this.form.prove = ''
+      this.form.gender = ''
+    },
     details (index, row) {
-      console.log(row)
+      console.log(this.form)
       axios.post('/api/v1/get_user_info', {
         user_id: row.user_id,
         identity: row.identity
       }).then((response) => {
         var data = JSON.parse(response.data.data)
-        // this.tableData = data
-        console.log(data)
+        if (data.identity !== 'U') {
+          this.form.name = data.name
+          this.form.phone_number = data.phone_number
+          this.form.email = data.email
+          this.form.prove = data.prove
+          if (data.gender === 'W') {
+            this.form.gender = '女'
+          } else {
+            this.form.gender = '男'
+          }
+        }
+        this.form.wechat_id = data.wechat_id
+        this.form.nickname = data.nickname
+        this.form.balance = data.balance
+        this.form.credit = data.credit
+        this.form.time = data.create_date
+        this.form.intro = data.intro
+        if (data.identity === 'S') {
+          this.form.identity = '学生'
+          this.form.number = data.student_num
+          this.form.orgnization = data.school
+        } else if (data.identity === 'C'){
+          this.form.identity = '企业人员'
+          this.form.number = data.job_num
+          this.form.orgnization = data.company
+        }
+        if (data.isprove === 'W') {
+          this.form.state = '审核中'
+        } else if (data.isprove  === 'P'){
+          this.form.state = '已审核'
+        } else if (data.isprove  === 'F'){
+          this.form.state = '审核未通过'
+        } else {
+          this.form.state = '未审核'
+        }
+        console.log(response)
       }).catch(function (err) {
+        reform() 
         console.log(err)
       })
     },
