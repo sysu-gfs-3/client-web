@@ -100,10 +100,10 @@
           <span class="user_info">{{form.number}}</span>
         </el-form-item>
         <el-form-item label="信用度:">
-          <span class="user_info">{{form.name}}</span>
+          <span class="user_info">{{form.credit}}</span>
         </el-form-item>
         <el-form-item label="余额:">
-          <span class="user_info">{{form.name}}</span>
+          <span class="user_info">{{form.balance}}</span>
         </el-form-item>
         <el-form-item label="所属组织:">
           <span class="user_info">{{form.orgnization}}</span>
@@ -179,18 +179,18 @@ export default {
       page: 0
     }).then((response) => {
       var data = JSON.parse(response.data.data)
-      this.length = data.length
       this.tableData = data
-      console.log(data)
+      // console.log(data)
     }).catch(function (err) {
       console.log(err)
     })
     axios.post('/api/v1/get_task_count', {
-      task_type: 'all'
+      task_type: 'all',
+      task_state: 'all'
     }).then((response) => {
-      var data = JSON.parse(response.data.data)
-      this.length = data.count
-      // console.log(data)
+      // var data = JSON.parse(response.data.data)
+      // this.length = data.count
+      console.log(response)
     }).catch(function (err) {
       console.log(err)
     })
@@ -213,7 +213,7 @@ export default {
       return row.identity === 'S' ? '学生' : row.identity === 'C' ? '企业人员' : '游客'
     },
     details (index, row) {
-      console.log(row)
+      // console.log(row)
       axios.post('/api/v1/get_user_info', {
         user_id: row.publish_id
         // identity: row.identity
@@ -235,11 +235,13 @@ export default {
         } else {
           this.form.gender = '男'
         }
+        this.form.balance = data.balance
+        this.form.credit = data.credit
         this.form.phone_number = data.phone_number
         this.form.email = data.email
         // this.form.balance = data.balance
         // this.form.credit = data.credit
-        console.log(row)
+        console.log(data)
       }).catch(function (err) {
         console.log(err)
       })
